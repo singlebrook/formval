@@ -548,7 +548,7 @@ function showErrors (errors, form) {
 
 		}
 		errorMessage += '</ul>Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
-		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/, '\n').replace(/<br \/>/g, '\n').replace(/<\/?ul>/g, '\n')
+		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/g, '').replace(/<br \/>/g, '\n').replace(/<ul>/g, '\n').replace(/<\/?ul>/g, '\n\n')
 		
 		// Display an error message for the overall form
 		if (form) {
