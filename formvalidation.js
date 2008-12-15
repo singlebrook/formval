@@ -525,7 +525,6 @@ function showErrors (errors, form) {
 	if (form) {
 		formval_clearErrors(form);
 	}
-
 	
 	if (errors.length > 0) {
 		var errorMessage = 'The form was not submitted due to the following problem' + ((errors.length > 1) ? 's' : '') + ':<ul>';
@@ -547,6 +546,7 @@ function showErrors (errors, form) {
 			errorMessage += '<li>' + errors[errorIndex]['text'] + '</li>';
 
 		}
+	
 		errorMessage += '</ul>Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
 		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/g, '').replace(/<br \/>/g, '\n').replace(/<ul>/g, '\n').replace(/<\/?ul>/g, '\n\n')
 		
@@ -555,7 +555,15 @@ function showErrors (errors, form) {
 			var errorContainer = document.getElementById(form.getAttribute('id') + '_error');
 			if (errorContainer) {
 				formval_removeClass(errorContainer, 'hidden');
-				errorContainer.innerHTML = errorMessage;
+				try { errorContainer.innerHTML = errorMessage; }
+				catch(er) { 
+					/* Our errorMessage contains block elements (The UL).
+					The W3C spec does not allow block elements inside certain other elements,
+					like paragraphs, for example.  Firefox does NOT follow the spec, and allows
+					this assignment.  Internet Explorer 7 does follow the spec, and will throw 
+					an exception.  So, we handle that exception below. */
+					errorContainer.innerHTML = "There was a problem with your form.  Please check it and try again."; 
+					}
 			}
 			// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
 			else if (undisplayedErrorCount > 0)
@@ -564,7 +572,6 @@ function showErrors (errors, form) {
 		// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
 		else if (undisplayedErrorCount > 0)
 			alert(errorMessageForAlert);
-
 		
 		return false;
 	}
