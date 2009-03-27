@@ -202,6 +202,16 @@ function getFormErrors(form) {
          else if (element.disallowEmptyValue && (element.selectedIndex == -1 || element.options[element.selectedIndex].value == '')) {
             errors[errors.length] = makeError('cannot be blank', element, element.disallowEmptyValueError);
          }
+         
+				/* Issue: IE users experience false disallowEmptyValue errors.
+					Root problem: IE returns the empty stirng for the option value
+					Workaround: Explicitly supply the value attribute for your option elements
+					Blame: IE fails to follow the W3C HTML Spec Section 17.6
+					The spec says: "[The value] attribute specifies the initial value of the control. 
+						If this attribute is not set, the initial value is set 
+						to the contents of the OPTION element."
+					-Jared 3/27/09
+				*/
 
       }
       
