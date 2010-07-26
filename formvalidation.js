@@ -41,6 +41,10 @@ There are a few CSS classes that you should implement to work with inline errors
 - Made "pattern" condition only apply to non-blank field values
 2008/12/09 - leon
 - Implemented inline errors. Death to alert()!
+2010/07/26 - Jared
+- The attributes "required" and "pattern" are now part of HTML5 and we can no longer use them.
+- Instead, we use "data-required" and "data-pattern"
+- See http://www.w3.org/TR/html5/elements.html#attr-data
 
 */
 
@@ -49,7 +53,7 @@ function getFormErrors(form) {
 
 		var arAttributes = new Array(
 			'desc',
-			'required',
+			'data-required',
 			'requiredError',
 			'maxlength',
 			'maxlengthError',
@@ -59,7 +63,7 @@ function getFormErrors(form) {
 			'mindateError',
 			'maxdate',
 			'maxdateError',
-			'pattern',
+			'data-pattern',
 			'patternError',
 			'disallowEmptyValue',
 			'disallowEmptyValueError',
@@ -84,7 +88,7 @@ function getFormErrors(form) {
          element.value = trimWhitespace(element.value)
          
          // required element
-         if (element.required && element.value == '') {
+         if (element["data-required"] && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -123,26 +127,26 @@ function getFormErrors(form) {
          }
          
          // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
-         else if (element.pattern && element.value.length != 0) {
-            if ( ( (element.pattern.toLowerCase() == 'visa' || element.pattern.toLowerCase() == 'mastercard' || element.pattern.toLowerCase() == 'american express' || element.pattern.toLowerCase() == 'diners club' || element.pattern.toLowerCase() == 'discover' || element.pattern.toLowerCase() == 'enroute' || element.pattern.toLowerCase() == 'jcb' || element.pattern.toLowerCase() == 'credit card') && isValidCreditCard(element.value, element.pattern) == false) ||
-                  (element.pattern.toLowerCase() == 'email' && isValidEmailStrict(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'us phone number' && 
+         else if (element["data-pattern"] && element.value.length != 0) {
+            if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(element.value, element["data-pattern"]) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'email' && isValidEmailStrict(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'us phone number' && 
                      ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) || 
                         (!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
-                  (element.pattern.toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
-                  (element.pattern.toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
-                  (element.pattern.toLowerCase() == 'integer' && isInteger(element.value, false) == false) ||
-                  (element.pattern.toLowerCase() == 'year' && isInteger(element.value, false) == false) ||
-                  (element.pattern.toLowerCase() == 'datetime' && isDate(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'time' && isTime(element.value) == false) ||
-                  (element.pattern.toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
-                  (element.pattern.substring(0, 1) == '/' && matchesRegexString(element.value, element.pattern) == false )
+                  (element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
+                  (element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false )
                  ) {
-               errors[errors.length] = makeError('must be a valid ' + element.pattern, element, element.patternError);
+               errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
             }
          }
          
@@ -166,7 +170,7 @@ function getFormErrors(form) {
       else if (element.type == "password") {
          
          // required element
-         if (element.required  && element.value == '') {
+         if (element["data-required"]  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -185,7 +189,7 @@ function getFormErrors(form) {
       else if (element.type == "file") {
          
          // required element
-         if (element.required  && element.value == '') {
+         if (element["data-required"]  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
       }
@@ -194,7 +198,7 @@ function getFormErrors(form) {
       else if (element.type == "select-one" || element.type == "select-multiple" || element.type == "select") {
 
          // required element
-         if (element.required && element.selectedIndex == -1) {
+         if (element["data-required"] && element.selectedIndex == -1) {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -220,7 +224,7 @@ function getFormErrors(form) {
          var radiogroup = form.elements[element.name];
 
          // required element
-         if (radiogroup.length && radiogroup[0] && (radiogroup[0].required || radiogroup.required)) {
+         if (radiogroup.length && radiogroup[0] && (radiogroup[0]["data-required"] || radiogroup["data-required"])) {
             var checkedRadioButton = -1;
             for (var radioIndex = 0; radioIndex < radiogroup.length; radioIndex++) {
                if (radiogroup[radioIndex].checked == true) {
