@@ -121,7 +121,7 @@ function getFormErrors(form) {
 					errors[errors.length] = makeError('must be a valid date', element, element.patternError);
 				}
 				else if( minDate > testDate ){
-					errors[errors.length] = makeError('cannot be earler than ' + element.mindate, element, element.mindateError);
+					errors[errors.length] = makeError('cannot be earlier than ' + element.mindate, element, element.mindateError);
 				}
 			}
          }
