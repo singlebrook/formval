@@ -138,8 +138,13 @@ function getFormErrors(form) {
                         (!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
                   (element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
                   (element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false) == false) ||
+                  
+                  /* integers */
+                  (element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false, false) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'english integer' && isInteger(element.value, false, true) == false) ||
+                  (element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false, false) == false) ||
+                  
+                  /* dates and times */
                   (element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
                   (element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
                   (element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
@@ -395,11 +400,22 @@ function isNumeric(string, ignoreWhiteSpace) {
 	return true;
 }
 
-// Check that a string contains only digits
-function isInteger(string, ignoreWhiteSpace) {
+// Check that a string contains only digits (and optional commas)
+function isInteger(string, ignoreWhiteSpace, allowCommas) {
+	// Set default values
+	if (typeof(ignoreWhiteSpace) == 'undefined')
+		ignoreWhiteSpace = false;
+	if (typeof(allowCommas) == 'undefined')
+		allowCommas = false;
+
+	// Strip commas out of string that we're checking for numericness
+	if (allowCommas)
+		string = string.replace(/,/g, '');
+		
 	if (!isNumeric(string, ignoreWhiteSpace))
 		return false;
-	if (Math.round(string, 0) != string)
+	// Compare these as strings, otherwise numbers with only zeros in the decimal places will pass the test
+	if ('' + Math.round(string, 0) !=  '' + string)
 		return false;
 	return true;
 }
