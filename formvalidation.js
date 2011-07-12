@@ -318,7 +318,7 @@ function isValidEmailStrict(address) {
 	if (domain.indexOf('.') == -1) return false;
 	if (domain.indexOf('.') == 0 || domain.indexOf('.') == domain.length - 1) return false;
 	//TLD Validation. This doesn't allow for @localhost or @[ipaddress]
-	if (!domain.match(/\.[a-zA-Z]{2}$/)) return false;
+	if (!domain.match(/\.[a-zA-Z]{2,}$/)) return false;
 	return true;
 }
 
