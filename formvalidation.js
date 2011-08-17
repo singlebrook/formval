@@ -45,7 +45,8 @@ There are a few CSS classes that you should implement to work with inline errors
 - The attributes "required" and "pattern" are now part of HTML5 and we can no longer use them.
 - Instead, we use "data-required" and "data-pattern"
 - See http://www.w3.org/TR/html5/elements.html#attr-data
-
+2011/08/17 - Jared
+- Fix bug: A "data-required" value of "no" will now be treated as false (not required)
 */
 
 function getFormErrors(form) {
@@ -82,13 +83,17 @@ function getFormErrors(form) {
 					element[arAttributes[i]] = new String(element.getAttribute(arAttributes[i])).replace(/[\r\n]/g, '').replace(/"/g, '\\"');
 				}
 			}
+      
+      /* Is the element required?  A "data-required" value of "no" will now
+      be treated as false (not required) -Jared 8/17/11 */
+      var isRequired = (typeof element["data-required"] != "undefined") && (element["data-required"].toLowerCase() != "no");
 
       // text and textarea types
       if (element.type == "text" || element.type == "textarea") {
          element.value = trimWhitespace(element.value)
          
          // required element
-         if (element["data-required"] && element.value == '') {
+         if (isRequired && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -175,7 +180,7 @@ function getFormErrors(form) {
       else if (element.type == "password") {
          
          // required element
-         if (element["data-required"]  && element.value == '') {
+         if (isRequired  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -194,7 +199,7 @@ function getFormErrors(form) {
       else if (element.type == "file") {
          
          // required element
-         if (element["data-required"]  && element.value == '') {
+         if (isRequired  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
       }
@@ -203,7 +208,7 @@ function getFormErrors(form) {
       else if (element.type == "select-one" || element.type == "select-multiple" || element.type == "select") {
 
          // required element
-         if (element["data-required"] && element.selectedIndex == -1) {
+         if (isRequired && element.selectedIndex == -1) {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
          
@@ -259,7 +264,7 @@ function getFormErrors(form) {
    }
    
 	return errors;
-}
+} // end getFormErrors()
 
 
 // Check that the number of characters in a string is between a max and a min
