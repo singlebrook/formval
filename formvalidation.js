@@ -48,6 +48,8 @@ function getFormErrors(form) {
 			'maxdateError',
 			'data-pattern',
 			'patternError',
+			'data-pattern-inverse',
+			'patternInverseError',
 			'disallowEmptyValue',
 			'disallowEmptyValueError',
 			'minval',
@@ -136,9 +138,15 @@ function getFormErrors(form) {
 									(element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
 									(element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
 									(element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
-									(element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false )
+									(element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false)
 								 ) {
 							 errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
+						}
+				 }
+
+				 else if (element["data-pattern-inverse"] && element.value.length != 0){
+						if (element["data-pattern-inverse"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern-inverse"])){
+							 errors[errors.length] = makeError('must be a valid ' + element["data-pattern-inverse"], element, element.patternInverseError);
 						}
 				 }
 
@@ -538,6 +546,7 @@ function getMod10(number) {
 	return (checksum % 10);
 }
 
+/* `showErrors` displays the errors inline or as an alert(). Note the new form arg! */
 function showErrors (errors, form) {
 	var undisplayedErrorCount = 0;
 
@@ -582,7 +591,9 @@ function showErrors (errors, form) {
 					this assignment.  Internet Explorer 7 does follow the spec, and will throw
 					an exception.  So, we handle that exception below. */
 					errorContainer.innerHTML = "There was a problem with your form.  Please check it and try again.";
-					}
+				}
+
+				formval_scrollTo($('#' + errorContainerId));
 			}
 			// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
 			else if (undisplayedErrorCount > 0)
@@ -599,6 +610,13 @@ function showErrors (errors, form) {
 	return true;
 }
 
+function formval_scrollTo(elm) {
+	$('html, body').animate({ scrollTop: $(elm).offset().top }, 1000);
+}
+
+/* `makeError` creates an error (but does not add it to the array).
+errorMsg will be preceded by element.desc, but customErrorMsg will
+override errorMsg and does not get any prefix. */
 function makeError (errorMsg, element, customErrorMsg) {
 	var theError;               // The error text
 	var stError = new Array();  // A hash with keys (id, text)
