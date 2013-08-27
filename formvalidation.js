@@ -1,54 +1,36 @@
-// Form Validation Functions  v1.1.8
-// documentation: http://www.dithered.com/javascript/form_validation/index.html
-// license: http://creativecommons.org/licenses/by/1.0/
-// core code by Chris Nott (chris[at]dithered[dot]com)
-// Extensive modifications by Singlebrook Technology (info[at]singlebrook[dot]com)
-
 /*
 
-*** README ***
-(incomplete)
+Form Validation Functions
+=========================
 
-getFormErrors(form) returns an array of hashes with keys (element, text)
-makeError (errorMsg, element, customErrorMsg) creates an error (but does not add it to the array). errorMsg will be
-	preceded by element.desc, but customErrorMsg will override errorMsg and does not get any prefix.
-showErrors(arErrors, form) displays the errors inline or as an alert(). Note the new form arg!
+license: http://creativecommons.org/licenses/by/1.0/
+core code by Chris Nott (chris[at]dithered[dot]com)
+Extensive modifications by Singlebrook Technology (info[at]singlebrook[dot]com)
 
-* INLINE ERRORS *
-To avoid the alert() display of the forms errors, you should add the following error containers.
-- An element with id of [form.id]_error. This will hold the overall error message for the form. This is optional.
-	Note that your form must have an id if you want to use this field.
-- For each form input with validation rules, an element with id of [input.id]_error. This will hold the error
-	message for that input.
+Inline Errors
+-------------
 
-There are a few CSS classes that you should implement to work with inline errors:
-- input.error will be applied to inputs that are in an error state. Use it for colored borders or backgrounds,
-	or an error icon as a background image.
-- .hidden will be applied to error containers (see above) when errors are cleared. It should contain display:none;
+To avoid the alert() display of the forms errors, you should add the
+following error containers.
 
+* An element with id of [form.id]_error. This will hold the overall
+error message for the form. This is optional. Note that your form must
+have an id if you want to use this field.
+* For each form input with validation rules, an element with id of
+[input.id]_error. This will hold the error message for that input.
 
-*** CHANGELOG ***
-2005/10/26 - leon
-- Added a new attribute "desc" which is now used to construct default error messages when a custom error message has not been supplied.
-- Added support for minval and maxval. They currently don't support custom error messages.
-2005/06/17 - leon
-- Added support for setting "required" and "requiredError" in the attributes of the first checkbox or radio in a group.
-2005/06/10 - leon
-- Added support for attribute
-2006/02/04 - leon
-- Added isInteger, isDate, isTime functions and corresponding patterns
-2007/04/24 - leon
-- Made "pattern" condition only apply to non-blank field values
-2008/12/09 - leon
-- Implemented inline errors. Death to alert()!
-2010/07/26 - Jared
-- The attributes "required" and "pattern" are now part of HTML5 and we can no longer use them.
-- Instead, we use "data-required" and "data-pattern"
-- See http://www.w3.org/TR/html5/elements.html#attr-data
-2011/08/17 - Jared
-- Fix bug: A "data-required" value of "no" will now be treated as false (not required)
+There are a few CSS classes that you should implement to work with
+inline errors:
+
+* input.error will be applied to inputs that are in an error state.
+Use it for colored borders or backgrounds,   or an error icon as a
+background image.
+* .hidden will be applied to error containers (see above) when errors
+are cleared. It should contain display:none;
+
 */
 
+/* `getFormErrors` returns an array of hashes with keys (element, text) */
 function getFormErrors(form) {
 	var errors = new Array();
 
