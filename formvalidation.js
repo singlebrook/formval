@@ -22,7 +22,7 @@ To avoid the alert() display of the forms errors, you should add the following e
 	message for that input.
 
 There are a few CSS classes that you should implement to work with inline errors:
-- input.error will be applied to inputs that are in an error state. Use it for colored borders or backgrounds, 
+- input.error will be applied to inputs that are in an error state. Use it for colored borders or backgrounds,
 	or an error icon as a background image.
 - .hidden will be applied to error containers (see above) when errors are cleared. It should contain display:none;
 
@@ -70,11 +70,11 @@ function getFormErrors(form) {
 			'disallowEmptyValueError',
 			'minval',
 			'maxval');
-   
+
    // loop thru all form elements
    for (var elementIndex = 0; elementIndex < form.elements.length; elementIndex++) {
       var element = form.elements[elementIndex];
-      
+
       // Copy relevant attributes to element properties for all element types excepts radios and checkboxes.
       // This allows us to put the validation params right in the form element tags.
 			for ( var i = 0; i < arAttributes.length; i++) {
@@ -83,7 +83,7 @@ function getFormErrors(form) {
 					element[arAttributes[i]] = new String(element.getAttribute(arAttributes[i])).replace(/[\r\n]/g, '').replace(/"/g, '\\"');
 				}
 			}
-      
+
       /* Is the element required?  A "data-required" value of "no" will now
       be treated as false (not required) -Jared 8/17/11 */
       var isRequired = (typeof element["data-required"] != "undefined") && (element["data-required"].toLowerCase() != "no");
@@ -91,12 +91,12 @@ function getFormErrors(form) {
       // text and textarea types
       if (element.type == "text" || element.type == "textarea") {
          element.value = trimWhitespace(element.value)
-         
+
          // required element
          if (isRequired && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
-         
+
          // maximum length
          else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
             errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
@@ -106,7 +106,7 @@ function getFormErrors(form) {
          else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
             errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
          }
-         
+
          else if( element.maxdate || element.mindate ){
 			var testDate = new Date(element.value);
 			// maximum date
@@ -130,7 +130,7 @@ function getFormErrors(form) {
 				}
 			}
          }
-         
+
          // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
          else if (element["data-pattern"] && element.value.length != 0) {
             if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(element.value, element["data-pattern"]) == false) ||
@@ -138,17 +138,17 @@ function getFormErrors(form) {
                   (element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
                   (element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
                   (element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'us phone number' && 
-                     ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) || 
+                  (element["data-pattern"].toLowerCase() == 'us phone number' &&
+                     ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) ||
                         (!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
                   (element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
                   (element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
-                  
+
                   /* integers */
                   (element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false, false) == false) ||
                   (element["data-pattern"].toLowerCase() == 'english integer' && isInteger(element.value, false, true) == false) ||
                   (element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false, false) == false) ||
-                  
+
                   /* dates and times */
                   (element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
                   (element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
@@ -159,7 +159,7 @@ function getFormErrors(form) {
                errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
             }
          }
-         
+
          // minimum and maximum value
          // strip commas
          var testval = element.value;
@@ -169,21 +169,21 @@ function getFormErrors(form) {
 				if (testval.replace(/\s/g, '') != '' && isNumeric(testval, false)) {
 					 if (element.minval && (1*testval < 1*element.minval))
 						errors[errors.length] = makeError('cannot be less than ' + element.minval, element);
-	
+
 					 if (element.maxval && isNumeric(testval, false) && (1*testval > 1*element.maxval))
 						errors[errors.length] = makeError('cannot be greater than ' + element.maxval, element);
 				}
 
       }
-      
-      // password 
+
+      // password
       else if (element.type == "password") {
-         
+
          // required element
          if (isRequired  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
-         
+
          // maximum length
          else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
             errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
@@ -194,16 +194,16 @@ function getFormErrors(form) {
             errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
          }
       }
-      
+
       // file upload
       else if (element.type == "file") {
-         
+
          // required element
          if (isRequired  && element.value == '') {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
       }
-      
+
       // select
       else if (element.type == "select-one" || element.type == "select-multiple" || element.type == "select") {
 
@@ -211,24 +211,24 @@ function getFormErrors(form) {
          if (isRequired && element.selectedIndex == -1) {
             errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
          }
-         
+
 		 // disallow empty value selection for select boxes
          else if (element.disallowEmptyValue && (element.selectedIndex == -1 || element.options[element.selectedIndex].value == '')) {
             errors[errors.length] = makeError('cannot be blank', element, element.disallowEmptyValueError);
          }
-         
+
 				/* Issue: IE users experience false disallowEmptyValue errors.
 					Root problem: IE returns the empty stirng for the option value
 					Workaround: Explicitly supply the value attribute for your option elements
 					Blame: IE fails to follow the W3C HTML Spec Section 17.6
-					The spec says: "[The value] attribute specifies the initial value of the control. 
-						If this attribute is not set, the initial value is set 
+					The spec says: "[The value] attribute specifies the initial value of the control.
+						If this attribute is not set, the initial value is set
 						to the contents of the OPTION element."
 					-Jared 3/27/09
 				*/
 
       }
-      
+
       // radio buttons
       else if (element.type == "radio" || element.type == "checkbox") {
          var radiogroup = form.elements[element.name];
@@ -242,7 +242,7 @@ function getFormErrors(form) {
                   break;
                }
             }
-            
+
             // show error if required and flag group as having been tested
             if (checkedRadioButton == -1 && !radiogroup.tested) {
             	if (radiogroup[0].requiredError)
@@ -252,17 +252,17 @@ function getFormErrors(form) {
 
                radiogroup.tested = true;
             }
-            
+
             // last radio button in group?  reset tested flag
             if (element == radiogroup[radiogroup.length - 1]) {
                radiogroup.tested = false;
             }
          }
-         
+
          radiogroup = null;
       }
    }
-   
+
 	return errors;
 } // end getFormErrors()
 
@@ -276,28 +276,28 @@ function isValidLength(string, min, max) {
 // Check that a credit card number is valid based using the LUHN formula (mod10 is 0)
 function isValidCreditCard(number) {
 	number = '' + number;
-	
+
 	if (number.length > 16 || number.length < 13 ) return false;
 	else if (getMod10(number) != 0) return false;
 	else if (arguments[1]) {
 		var type = arguments[1];
 		var first2digits = number.substring(0, 2);
 		var first4digits = number.substring(0, 4);
-		
+
 		if (type.toLowerCase() == 'visa' && number.substring(0, 1) == 4 &&
 			(number.length == 16 || number.length == 13 )) return true;
 		else if (type.toLowerCase() == 'mastercard' && number.length == 16 &&
 			(first2digits == '51' || first2digits == '52' || first2digits == '53' || first2digits == '54' || first2digits == '55')) return true;
-      else if (type.toLowerCase() == 'american express' && number.length == 15 && 
+      else if (type.toLowerCase() == 'american express' && number.length == 15 &&
          (first2digits == '34' || first2digits == '37')) return true;
-      else if (type.toLowerCase() == 'diners club' && number.length == 14 && 
+      else if (type.toLowerCase() == 'diners club' && number.length == 14 &&
          (first2digits == '30' || first2digits == '36' || first2digits == '38')) return true;
 		else if (type.toLowerCase() == 'discover' && number.length == 16 && first4digits == '6011') return true;
-      else if (type.toLowerCase() == 'enroute' && number.length == 15 && 
+      else if (type.toLowerCase() == 'enroute' && number.length == 15 &&
          (first4digits == '2014' || first4digits == '2149')) return true;
 		else if (type.toLowerCase() == 'jcb' && number.length == 16 &&
 			(first4digits == '3088' || first4digits == '3096' || first4digits == '3112' || first4digits == '3158' || first4digits == '3337' || first4digits == '3528')) return true;
-		
+
     // if the above card types are all the ones that the site accepts, change the line below to 'else return false'
     else return true;
 	}
@@ -310,7 +310,7 @@ function isValidEmail(address) {
       if (address.search(/^\w+((-\w+)|(\.\w+)|('\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1) return true;
       else return false;
    }
-   
+
    // allow empty strings to return true - screen these with either a 'required' test or a 'length' test
    else return true;
 }
@@ -399,7 +399,7 @@ function isNumeric(string, ignoreWhiteSpace) {
 	string = string.replace(/^-/, '');
 	// Remove a single decimal point
 	string = string.replace(/\./, '');
-	
+
 	// Only numbers should be left
 	if (string.search) {
 		if (string.search(/[^\d]/) != -1) return false;
@@ -418,7 +418,7 @@ function isInteger(string, ignoreWhiteSpace, allowCommas) {
 	// Strip commas out of string that we're checking for numericness
 	if (allowCommas)
 		string = string.replace(/,/g, '');
-		
+
 	if (!isNumeric(string, ignoreWhiteSpace))
 		return false;
 	// Compare these as strings, otherwise numbers with only zeros in the decimal places will pass the test
@@ -437,28 +437,28 @@ function isNonOverflowedDate(string) {
 	// date as the string passed in. This is to prevent the browser from happily accepting dates like
 	// 13/13/2007 (turns into 1/13/2008)
 	// It currently only accepts dates in the forms 'm?m[-/]d?d[-/]yyyy'
-	
+
 	var dateRegex = new RegExp('^\\d?\\d[-/]\\d?\\d[-/]\\d{4}$');
-	
+
 	if (!string.match(dateRegex))
 		return false;
 
 	var parsedDate = new Date(string);
 	if (isNaN(parsedDate))
 		return false;
-		
+
 	var month = parsedDate.getMonth() + 1;
 	var day = parsedDate.getDate();
 	var year = parsedDate.getFullYear();
 	var parsedDateWithSlashes = '' + month + '/' + day + '/' + year;
-	
+
 	// Change dashes to slashes and strip leading zeros
 	var inputStringWithSlashes = string.replace(/-/g, '/').replace(/^0/, '').replace(new RegExp('/0', 'g'), '/');
-	
+
 	if (parsedDateWithSlashes != inputStringWithSlashes) {
 		return false;
 	}
-		
+
 	return true;
 }
 
@@ -466,27 +466,27 @@ function isTime(strTime) {
 	// This needs some work. It currently says "33:30-pm" is a valid time.
 	if (strTime.length == 0)
 		return true;
-		
+
 	var strTestTime = new String(strTime);
 	strTestTime.toUpperCase();
-	
+
 	var bolTime = false;
-	
+
 	if (strTestTime.indexOf("PM",1) != -1 || strTestTime.indexOf("AM",1))
 	bolTime = true;
-	
+
 	if (bolTime && strTestTime.indexOf(":",0) == 0)
 	bolTime = false;
-	
+
 	var nColonPlace = strTestTime.indexOf(":",1);
 	if (bolTime && ((parseInt(nColonPlace) + 5) < (strTestTime.length - 1) || (parseInt(nColonPlace) + 4) > (strTestTime.length - 1)))
 	bolTime = false;
-	
-	
+
+
 	return bolTime;
 }
 
-// Remove characters that might cause security problems from a string 
+// Remove characters that might cause security problems from a string
 function removeBadCharacters(string) {
 	if (string.replace) {
 		string.replace(/[<>\"\'%;\)\(&\+]/, '');
@@ -508,14 +508,14 @@ function trimWhitespace(string) {
 	var newString  = '';
 	var substring  = '';
 	beginningFound = false;
-	
+
 	// copy characters over to a new string
 	// retain whitespace characters if they are between other characters
 	for (var i = 0; i < string.length; i++) {
-		
+
 		// copy non-whitespace characters
 		if (string.charAt(i) != ' ' && string.charCodeAt(i) != 9) {
-			
+
 			// if the temporary string contains some whitespace characters, copy them first
 			if (substring != '') {
 				newString += substring;
@@ -524,7 +524,7 @@ function trimWhitespace(string) {
 			newString += string.charAt(i);
 			if (beginningFound == false) beginningFound = true;
 		}
-		
+
 		// hold whitespace characters in a temporary string if they follow a non-whitespace character
 		else if (beginningFound == true) substring += string.charAt(i);
 	}
@@ -533,19 +533,19 @@ function trimWhitespace(string) {
 
 // Returns a checksum digit for a number using mod 10
 function getMod10(number) {
-	
+
 	// convert number to a string and check that it contains only digits
 	// return -1 for illegal input
 	number = '' + number;
 	number = removeSpaces(number);
 	if (!isNumeric(number)) return -1;
-	
+
 	// calculate checksum using mod10
 	var checksum = 0;
 	for (var i = number.length - 1; i >= 0; i--) {
 		var isOdd = ((number.length - i) % 2 != 0) ? true : false;
 		digit = number.charAt(i);
-		
+
 		if (isOdd) checksum += parseInt(digit);
 		else {
 			var evenDigit = parseInt(digit) * 2;
@@ -562,11 +562,11 @@ function showErrors (errors, form) {
 	if (form) {
 		formval_clearErrors(form);
 	}
-	
+
 	if (errors.length > 0) {
 		var errorMessage = 'The form was not submitted due to the following problem' + ((errors.length > 1) ? 's' : '') + ':<ul>';
 		for (var errorIndex = 0; errorIndex < errors.length; errorIndex++) {
-	
+
 			// Add "error" class to form input
 			if (document.getElementById(errors[errorIndex]['id']))
 				formval_addClass(document.getElementById(errors[errorIndex]['id']), 'error');
@@ -583,23 +583,23 @@ function showErrors (errors, form) {
 			errorMessage += '<li>' + errors[errorIndex]['text'] + '</li>';
 
 		}
-	
+
 		errorMessage += '</ul>Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
 		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/g, '').replace(/<br \/>/g, '\n').replace(/<ul>/g, '\n').replace(/<\/?ul>/g, '\n\n')
-		
+
 		// Display an error message for the overall form
 		if (form) {
 			var errorContainer = document.getElementById(form.getAttribute('id') + '_error');
 			if (errorContainer) {
 				formval_removeClass(errorContainer, 'hidden');
 				try { errorContainer.innerHTML = errorMessage; }
-				catch(er) { 
+				catch(er) {
 					/* Our errorMessage contains block elements (The UL).
 					The W3C spec does not allow block elements inside certain other elements,
 					like paragraphs, for example.  Firefox does NOT follow the spec, and allows
-					this assignment.  Internet Explorer 7 does follow the spec, and will throw 
+					this assignment.  Internet Explorer 7 does follow the spec, and will throw
 					an exception.  So, we handle that exception below. */
-					errorContainer.innerHTML = "There was a problem with your form.  Please check it and try again."; 
+					errorContainer.innerHTML = "There was a problem with your form.  Please check it and try again.";
 					}
 			}
 			// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
@@ -609,10 +609,10 @@ function showErrors (errors, form) {
 		// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
 		else if (undisplayedErrorCount > 0)
 			alert(errorMessageForAlert);
-		
+
 		return false;
 	}
-	
+
 	// no errors: return true
 	return true;
 }
@@ -629,10 +629,10 @@ function makeError (errorMsg, element, customErrorMsg) {
 		theError = element.name + ' ' + errorMsg;
 	else
 		theError = errorMsg;
-	
+
 	stError['id'] = element.id;
 	stError['text'] = theError;
-	
+
 	return stError;
 }
 
@@ -643,11 +643,11 @@ function matchesRegexString (value, regexString) {
 	var regexOpts = regexString.replace(/^.*\//, '');
 	// Strip the leading slash and the last slash plus any options
 	var regexNoSlashes = regexString.replace(/(^\/|\/([^\/]*)$)/g, '');
-	
+
 	//alert("regexNoSlashes = " + regexNoSlashes + "\nregexOpts = " + regexOpts);
-	
+
 	var myRE = new RegExp(regexNoSlashes, regexOpts);
-	
+
 	if (value.match(myRE))
 		return true;
 	else
@@ -713,7 +713,7 @@ function formval_getFormErrorContainers(form) {
 		if (document.getElementById(form.elements[i].id + '_error'))
 			arErrorContainers.push(document.getElementById(form.elements[i].id + '_error'));
 	}
-	
+
 	return arErrorContainers;
 }
 
