@@ -53,12 +53,12 @@ function getFormErrors(form) {
 			'minval',
 			'maxval');
 
-   // loop thru all form elements
-   for (var elementIndex = 0; elementIndex < form.elements.length; elementIndex++) {
-      var element = form.elements[elementIndex];
+	 // loop thru all form elements
+	 for (var elementIndex = 0; elementIndex < form.elements.length; elementIndex++) {
+			var element = form.elements[elementIndex];
 
-      // Copy relevant attributes to element properties for all element types excepts radios and checkboxes.
-      // This allows us to put the validation params right in the form element tags.
+			// Copy relevant attributes to element properties for all element types excepts radios and checkboxes.
+			// This allows us to put the validation params right in the form element tags.
 			for ( var i = 0; i < arAttributes.length; i++) {
 				if (element.getAttribute(arAttributes[i])) {
 					// The "new String(...).replace(...).replace(...) below removes line break chars that can cause IE7 to choke and escapes double-quote chars
@@ -66,30 +66,30 @@ function getFormErrors(form) {
 				}
 			}
 
-      /* Is the element required?  A "data-required" value of "no" will now
-      be treated as false (not required) -Jared 8/17/11 */
-      var isRequired = (typeof element["data-required"] != "undefined") && (element["data-required"].toLowerCase() != "no");
+			/* Is the element required?  A "data-required" value of "no" will now
+			be treated as false (not required) -Jared 8/17/11 */
+			var isRequired = (typeof element["data-required"] != "undefined") && (element["data-required"].toLowerCase() != "no");
 
-      // text and textarea types
-      if (element.type == "text" || element.type == "textarea") {
-         element.value = trimWhitespace(element.value)
+			// text and textarea types
+			if (element.type == "text" || element.type == "textarea") {
+				 element.value = trimWhitespace(element.value)
 
-         // required element
-         if (isRequired && element.value == '') {
-            errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
-         }
+				 // required element
+				 if (isRequired && element.value == '') {
+						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
+				 }
 
-         // maximum length
-         else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
-            errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
-         }
+				 // maximum length
+				 else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
+						errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
+				 }
 
-         // minimum length
-         else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
-            errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
-         }
+				 // minimum length
+				 else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
+						errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
+				 }
 
-         else if( element.maxdate || element.mindate ){
+				 else if( element.maxdate || element.mindate ){
 			var testDate = new Date(element.value);
 			// maximum date
 			if (element.maxdate) {
@@ -111,42 +111,42 @@ function getFormErrors(form) {
 					errors[errors.length] = makeError('cannot be earlier than ' + element.mindate, element, element.mindateError);
 				}
 			}
-         }
+				 }
 
-         // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
-         else if (element["data-pattern"] && element.value.length != 0) {
-            if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(element.value, element["data-pattern"]) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'email' && isValidEmailStrict(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'us phone number' &&
-                     ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) ||
-                        (!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
-                  (element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
+				 // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
+				 else if (element["data-pattern"] && element.value.length != 0) {
+						if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(element.value, element["data-pattern"]) == false) ||
+									(element["data-pattern"].toLowerCase() == 'email' && isValidEmailStrict(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'us phone number' &&
+										 ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) ||
+												(!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
+									(element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
+									(element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
 
-                  /* integers */
-                  (element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false, false) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'english integer' && isInteger(element.value, false, true) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false, false) == false) ||
+									/* integers */
+									(element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false, false) == false) ||
+									(element["data-pattern"].toLowerCase() == 'english integer' && isInteger(element.value, false, true) == false) ||
+									(element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false, false) == false) ||
 
-                  /* dates and times */
-                  (element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
-                  (element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
-                  (element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false )
-                 ) {
-               errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
-            }
-         }
+									/* dates and times */
+									(element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
+									(element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
+									(element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false )
+								 ) {
+							 errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
+						}
+				 }
 
-         // minimum and maximum value
-         // strip commas
-         var testval = element.value;
-         while (testval.match(/,/) == ',')
-         	testval = testval.replace(',', '');
+				 // minimum and maximum value
+				 // strip commas
+				 var testval = element.value;
+				 while (testval.match(/,/) == ',')
+					testval = testval.replace(',', '');
 
 				if (testval.replace(/\s/g, '') != '' && isNumeric(testval, false)) {
 					 if (element.minval && (1*testval < 1*element.minval))
@@ -156,48 +156,48 @@ function getFormErrors(form) {
 						errors[errors.length] = makeError('cannot be greater than ' + element.maxval, element);
 				}
 
-      }
+			}
 
-      // password
-      else if (element.type == "password") {
+			// password
+			else if (element.type == "password") {
 
-         // required element
-         if (isRequired  && element.value == '') {
-            errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
-         }
+				 // required element
+				 if (isRequired  && element.value == '') {
+						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
+				 }
 
-         // maximum length
-         else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
-            errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
-         }
+				 // maximum length
+				 else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
+						errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
+				 }
 
-         // minimum length
-         else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
-            errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
-         }
-      }
+				 // minimum length
+				 else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
+						errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
+				 }
+			}
 
-      // file upload
-      else if (element.type == "file") {
+			// file upload
+			else if (element.type == "file") {
 
-         // required element
-         if (isRequired  && element.value == '') {
-            errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
-         }
-      }
+				 // required element
+				 if (isRequired  && element.value == '') {
+						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
+				 }
+			}
 
-      // select
-      else if (element.type == "select-one" || element.type == "select-multiple" || element.type == "select") {
+			// select
+			else if (element.type == "select-one" || element.type == "select-multiple" || element.type == "select") {
 
-         // required element
-         if (isRequired && element.selectedIndex == -1) {
-            errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
-         }
+				 // required element
+				 if (isRequired && element.selectedIndex == -1) {
+						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
+				 }
 
 		 // disallow empty value selection for select boxes
-         else if (element.disallowEmptyValue && (element.selectedIndex == -1 || element.options[element.selectedIndex].value == '')) {
-            errors[errors.length] = makeError('cannot be blank', element, element.disallowEmptyValueError);
-         }
+				 else if (element.disallowEmptyValue && (element.selectedIndex == -1 || element.options[element.selectedIndex].value == '')) {
+						errors[errors.length] = makeError('cannot be blank', element, element.disallowEmptyValueError);
+				 }
 
 				/* Issue: IE users experience false disallowEmptyValue errors.
 					Root problem: IE returns the empty stirng for the option value
@@ -209,41 +209,41 @@ function getFormErrors(form) {
 					-Jared 3/27/09
 				*/
 
-      }
+			}
 
-      // radio buttons
-      else if (element.type == "radio" || element.type == "checkbox") {
-         var radiogroup = form.elements[element.name];
+			// radio buttons
+			else if (element.type == "radio" || element.type == "checkbox") {
+				 var radiogroup = form.elements[element.name];
 
-         // required element
-         if (radiogroup.length && radiogroup[0] && (radiogroup[0]["data-required"] || radiogroup["data-required"])) {
-            var checkedRadioButton = -1;
-            for (var radioIndex = 0; radioIndex < radiogroup.length; radioIndex++) {
-               if (radiogroup[radioIndex].checked == true) {
-                  checkedRadioButton = radioIndex;
-                  break;
-               }
-            }
+				 // required element
+				 if (radiogroup.length && radiogroup[0] && (radiogroup[0]["data-required"] || radiogroup["data-required"])) {
+						var checkedRadioButton = -1;
+						for (var radioIndex = 0; radioIndex < radiogroup.length; radioIndex++) {
+							 if (radiogroup[radioIndex].checked == true) {
+									checkedRadioButton = radioIndex;
+									break;
+							 }
+						}
 
-            // show error if required and flag group as having been tested
-            if (checkedRadioButton == -1 && !radiogroup.tested) {
-            	if (radiogroup[0].requiredError)
-	               errors[errors.length] = makeError('cannot be blank', radiogroup[0], radiogroup[0].requiredError);
-	          	else
-	               errors[errors.length] = makeError('cannot be blank', radiogroup, radiogroup.requiredError);
+						// show error if required and flag group as having been tested
+						if (checkedRadioButton == -1 && !radiogroup.tested) {
+							if (radiogroup[0].requiredError)
+								 errors[errors.length] = makeError('cannot be blank', radiogroup[0], radiogroup[0].requiredError);
+							else
+								 errors[errors.length] = makeError('cannot be blank', radiogroup, radiogroup.requiredError);
 
-               radiogroup.tested = true;
-            }
+							 radiogroup.tested = true;
+						}
 
-            // last radio button in group?  reset tested flag
-            if (element == radiogroup[radiogroup.length - 1]) {
-               radiogroup.tested = false;
-            }
-         }
+						// last radio button in group?  reset tested flag
+						if (element == radiogroup[radiogroup.length - 1]) {
+							 radiogroup.tested = false;
+						}
+				 }
 
-         radiogroup = null;
-      }
-   }
+				 radiogroup = null;
+			}
+	 }
 
 	return errors;
 } // end getFormErrors()
@@ -270,31 +270,31 @@ function isValidCreditCard(number) {
 			(number.length == 16 || number.length == 13 )) return true;
 		else if (type.toLowerCase() == 'mastercard' && number.length == 16 &&
 			(first2digits == '51' || first2digits == '52' || first2digits == '53' || first2digits == '54' || first2digits == '55')) return true;
-      else if (type.toLowerCase() == 'american express' && number.length == 15 &&
-         (first2digits == '34' || first2digits == '37')) return true;
-      else if (type.toLowerCase() == 'diners club' && number.length == 14 &&
-         (first2digits == '30' || first2digits == '36' || first2digits == '38')) return true;
+			else if (type.toLowerCase() == 'american express' && number.length == 15 &&
+				 (first2digits == '34' || first2digits == '37')) return true;
+			else if (type.toLowerCase() == 'diners club' && number.length == 14 &&
+				 (first2digits == '30' || first2digits == '36' || first2digits == '38')) return true;
 		else if (type.toLowerCase() == 'discover' && number.length == 16 && first4digits == '6011') return true;
-      else if (type.toLowerCase() == 'enroute' && number.length == 15 &&
-         (first4digits == '2014' || first4digits == '2149')) return true;
+			else if (type.toLowerCase() == 'enroute' && number.length == 15 &&
+				 (first4digits == '2014' || first4digits == '2149')) return true;
 		else if (type.toLowerCase() == 'jcb' && number.length == 16 &&
 			(first4digits == '3088' || first4digits == '3096' || first4digits == '3112' || first4digits == '3158' || first4digits == '3337' || first4digits == '3528')) return true;
 
-    // if the above card types are all the ones that the site accepts, change the line below to 'else return false'
-    else return true;
+		// if the above card types are all the ones that the site accepts, change the line below to 'else return false'
+		else return true;
 	}
 	else return true;
 }
 
 // Check that an email address is valid based on RFC 821 (?)
 function isValidEmail(address) {
-   if (address != '' && address.search) {
-      if (address.search(/^\w+((-\w+)|(\.\w+)|('\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1) return true;
-      else return false;
-   }
+	 if (address != '' && address.search) {
+			if (address.search(/^\w+((-\w+)|(\.\w+)|('\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1) return true;
+			else return false;
+	 }
 
-   // allow empty strings to return true - screen these with either a 'required' test or a 'length' test
-   else return true;
+	 // allow empty strings to return true - screen these with either a 'required' test or a 'length' test
+	 else return true;
 }
 
 // Check that an email address has the form something@something.something
@@ -314,9 +314,9 @@ function isValidEmailStrict(address) {
 function isValidZipcode(zipcode) {
 	zipcode = removeSpaces(zipcode);
 	if (!(zipcode.length == 5 || zipcode.length == 9 || zipcode.length == 10)) return false;
-   if ((zipcode.length == 5 || zipcode.length == 9) && !isNumeric(zipcode)) return false;
-   if (zipcode.length == 10 && zipcode.search && zipcode.search(/^\d{5}-\d{4}$/) == -1) return false;
-   return true;
+	 if ((zipcode.length == 5 || zipcode.length == 9) && !isNumeric(zipcode)) return false;
+	 if (zipcode.length == 10 && zipcode.search && zipcode.search(/^\d{5}-\d{4}$/) == -1) return false;
+	 return true;
 }
 
 
@@ -333,26 +333,26 @@ function isValidPostalcode(postalcode) {
 
 // Check that a US or Canadian phone number is valid
 function isValidUSPhoneNumber(areaCode, prefixNumber, suffixNumber) {
-   if (arguments.length == 1) {
-      var phoneNumber = arguments[0];
-      phoneNumber = phoneNumber.replace(/\D+/g, '');
-      var length = phoneNumber.length;
-      if (phoneNumber.length >= 7) {
-         var areaCode = phoneNumber.substring(0, length-7);
-         var prefixNumber = phoneNumber.substring(length-7, length-4);
-         var suffixNumber = phoneNumber.substring(length-4);
-      }
-      else return false;
-   }
-   else if (arguments.length == 3) {
-      var areaCode = arguments[0];
-      var prefixNumber = arguments[1];
-      var suffixNumber = arguments[2];
-   }
-   else return true;
+	 if (arguments.length == 1) {
+			var phoneNumber = arguments[0];
+			phoneNumber = phoneNumber.replace(/\D+/g, '');
+			var length = phoneNumber.length;
+			if (phoneNumber.length >= 7) {
+				 var areaCode = phoneNumber.substring(0, length-7);
+				 var prefixNumber = phoneNumber.substring(length-7, length-4);
+				 var suffixNumber = phoneNumber.substring(length-4);
+			}
+			else return false;
+	 }
+	 else if (arguments.length == 3) {
+			var areaCode = arguments[0];
+			var prefixNumber = arguments[1];
+			var suffixNumber = arguments[2];
+	 }
+	 else return true;
 
-   if (areaCode.length != 3 || !isNumeric(areaCode) || prefixNumber.length != 3 || !isNumeric(prefixNumber) || suffixNumber.length != 4 || !isNumeric(suffixNumber)) return false;
-   return true;
+	 if (areaCode.length != 3 || !isNumeric(areaCode) || prefixNumber.length != 3 || !isNumeric(prefixNumber) || suffixNumber.length != 4 || !isNumeric(suffixNumber)) return false;
+	 return true;
 }
 
 // Check that a string contains only letters and numbers
@@ -411,7 +411,7 @@ function isInteger(string, ignoreWhiteSpace, allowCommas) {
 
 function isDate(string)
 {
-    return !isNaN(new Date(string));
+		return !isNaN(new Date(string));
 }
 
 function isNonOverflowedDate(string) {
@@ -665,21 +665,21 @@ function formval_clearErrors(form) {
 
 // Returns an array of elements matching the specified class. Parent node and tag type are optional.
 function formval_getElementsByClass(searchClass,node,tag) {
-  var classElements = new Array();
-  if (node == null)
-    node = document;
-  if (tag == null)
-    tag = '*';
-  var els = node.getElementsByTagName(tag);
-  var elsLen = els.length;
-  var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-  for (i = 0, j = 0; i < elsLen; i++) {
-    if (pattern.test(els[i].className) ) {
-      classElements[j] = els[i];
-      j++;
-    }
-  }
-  return classElements;
+	var classElements = new Array();
+	if (node == null)
+		node = document;
+	if (tag == null)
+		tag = '*';
+	var els = node.getElementsByTagName(tag);
+	var elsLen = els.length;
+	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+	for (i = 0, j = 0; i < elsLen; i++) {
+		if (pattern.test(els[i].className) ) {
+			classElements[j] = els[i];
+			j++;
+		}
+	}
+	return classElements;
 }
 
 
