@@ -92,27 +92,27 @@ function getFormErrors(form) {
 				 }
 
 				 else if( element.maxdate || element.mindate ){
-			var testDate = new Date(element.value);
-			// maximum date
-			if (element.maxdate) {
-				var maxDate = new Date( element.maxdate )
-				if( isNonOverflowedDate(element.value) == false ){
-					errors[errors.length] = makeError('must be a valid date', element, element.patternError);
-				}
-				else if( maxDate < testDate ){
-					errors[errors.length] = makeError('cannot be later than ' + element.maxdate, element, element.maxdateError);
-				}
-			}
-			// minimum date
-			if (element.mindate) {
-				var minDate = new Date( element.mindate );
-				if( isNonOverflowedDate(element.value) == false ){
-					errors[errors.length] = makeError('must be a valid date', element, element.patternError);
-				}
-				else if( minDate > testDate ){
-					errors[errors.length] = makeError('cannot be earlier than ' + element.mindate, element, element.mindateError);
-				}
-			}
+					var testDate = new Date(element.value);
+					// maximum date
+					if (element.maxdate) {
+						var maxDate = new Date( element.maxdate )
+						if( isNonOverflowedDate(element.value) == false ){
+							errors[errors.length] = makeError('must be a valid date', element, element.patternError);
+						}
+						else if( maxDate < testDate ){
+							errors[errors.length] = makeError('cannot be later than ' + element.maxdate, element, element.maxdateError);
+						}
+					}
+					// minimum date
+					if (element.mindate) {
+						var minDate = new Date( element.mindate );
+						if( isNonOverflowedDate(element.value) == false ){
+							errors[errors.length] = makeError('must be a valid date', element, element.patternError);
+						}
+						else if( minDate > testDate ){
+							errors[errors.length] = makeError('cannot be earlier than ' + element.mindate, element, element.mindateError);
+						}
+					}
 				 }
 
 				 // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
@@ -202,7 +202,7 @@ function getFormErrors(form) {
 						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
 				 }
 
-		 // disallow empty value selection for select boxes
+				 // disallow empty value selection for select boxes
 				 else if (element.disallowEmptyValue && (element.selectedIndex == -1 || element.options[element.selectedIndex].value == '')) {
 						errors[errors.length] = makeError('cannot be blank', element, element.disallowEmptyValueError);
 				 }
@@ -547,7 +547,7 @@ function getMod10(number) {
 }
 
 /* `showErrors` displays the errors inline or as an alert(). Note the new form arg! */
-function showErrors (errors, form) {
+function showErrors (errors, form, customErrorListHeader, customErrorListFooter) {
 	var undisplayedErrorCount = 0;
 
 	if (form) {
@@ -555,7 +555,9 @@ function showErrors (errors, form) {
 	}
 
 	if (errors.length > 0) {
-		var errorMessage = 'The form was not submitted due to the following problem' + ((errors.length > 1) ? 's' : '') + ':<ul>';
+		var errorMessage = typeof customErrorListHeader !== undefined ? customErrorListHeader :
+			'The form was not submitted due to the following problem' + ((errors.length > 1) ? 's' : '') + ':';
+		var errMessages = [];
 		for (var errorIndex = 0; errorIndex < errors.length; errorIndex++) {
 
 			// Add "error" class to form input
@@ -571,11 +573,17 @@ function showErrors (errors, form) {
 			else
 				undisplayedErrorCount++;
 
-			errorMessage += '<li>' + errors[errorIndex]['text'] + '</li>';
+			var thisErrMsg = '<li>' + errors[errorIndex]['text'] + '</li>';
+			if( errMessages.indexOf(thisErrMsg) == -1 ){
+				errMessages.push(thisErrMsg);
+			}
 
 		}
+		errorMessage += '<ul>' + errMessages.join('') + '</ul>';
 
-		errorMessage += '</ul>Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
+
+		errorMessage += typeof customErrorListFooter !== undefined ? customErrorListFooter :
+			'Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
 		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/g, '').replace(/<br \/>/g, '\n').replace(/<ul>/g, '\n').replace(/<\/?ul>/g, '\n\n')
 
 		// Display an error message for the overall form
