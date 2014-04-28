@@ -555,7 +555,7 @@ function showErrors (errors, form, customErrorListHeader, customErrorListFooter)
 	}
 
 	if (errors.length > 0) {
-		var errorMessage = typeof customErrorListHeader !== undefined ? customErrorListHeader :
+		var errorMessage = customErrorListHeader !== undefined ? customErrorListHeader :
 			'The form was not submitted due to the following problem' + ((errors.length > 1) ? 's' : '') + ':';
 		var errMessages = [];
 		for (var errorIndex = 0; errorIndex < errors.length; errorIndex++) {
@@ -582,7 +582,7 @@ function showErrors (errors, form, customErrorListHeader, customErrorListFooter)
 		errorMessage += '<ul>' + errMessages.join('') + '</ul>';
 
 
-		errorMessage += typeof customErrorListFooter !== undefined ? customErrorListFooter :
+		errorMessage += customErrorListFooter !== undefined ? customErrorListFooter :
 			'Please fix ' + ((errors.length > 1) ? 'these' : 'this') + ' problem' + ((errors.length > 1) ? 's' : '') + ' and resubmit the form.';
 		var errorMessageForAlert = errorMessage.replace(/<li>/g, '\n* ').replace(/<\/?li>/g, '').replace(/<br \/>/g, '\n').replace(/<ul>/g, '\n').replace(/<\/?ul>/g, '\n\n')
 
