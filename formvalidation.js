@@ -31,8 +31,13 @@ are cleared. It should contain display:none;
 */
 
 /* `getFormErrors` returns an array of hashes with keys (element, text) */
-function getFormErrors(form) {
+/* trimWS is an argument that allows one to be explicit about their desires to
+	trim white space while validating text fields. When False, if a field is required,
+	it will check that the field's value isn't all white space, but will not affect
+	the field's value. By default trimWS is true (original functionality) */
+function getFormErrors(form, trimWS) {
 	var errors = new Array();
+	if( trimWS === undefined ){ trimWS = true; }
 
 		var arAttributes = new Array(
 			'desc',
@@ -74,29 +79,30 @@ function getFormErrors(form) {
 
 			// text and textarea types
 			if (element.type == "text" || element.type == "textarea") {
-				 element.value = trimWhitespace(element.value)
+				if( trimWS ){ element.value = trimWhitespace(element.value) }
+				var eleValue = trimWhitespace(element.value);
 
 				 // required element
-				 if (isRequired && element.value == '') {
+				 if (isRequired && eleValue == '') {
 						errors[errors.length] = makeError('cannot be blank', element, element.requiredError);
 				 }
 
 				 // maximum length
-				 else if (element.maxlength && isValidLength(element.value, 0, element.maxlength) == false) {
+				 else if (element.maxlength && isValidLength(eleValue, 0, element.maxlength) == false) {
 						errors[errors.length] = makeError('cannot be longer than ' + element.maxlength + ' characters', element, element.maxlengthError);
 				 }
 
 				 // minimum length
-				 else if (element.minlength && isValidLength(element.value, element.minlength, Number.MAX_VALUE) == false) {
+				 else if (element.minlength && isValidLength(eleValue, element.minlength, Number.MAX_VALUE) == false) {
 						errors[errors.length] = makeError('cannot be shorter than ' + element.minlength + ' characters', element, element.minlengthError);
 				 }
 
 				 else if( element.maxdate || element.mindate ){
-					var testDate = new Date(element.value);
+					var testDate = new Date(eleValue);
 					// maximum date
 					if (element.maxdate) {
 						var maxDate = new Date( element.maxdate )
-						if( isNonOverflowedDate(element.value) == false ){
+						if( isNonOverflowedDate(eleValue) == false ){
 							errors[errors.length] = makeError('must be a valid date', element, element.patternError);
 						}
 						else if( maxDate < testDate ){
@@ -106,7 +112,7 @@ function getFormErrors(form) {
 					// minimum date
 					if (element.mindate) {
 						var minDate = new Date( element.mindate );
-						if( isNonOverflowedDate(element.value) == false ){
+						if( isNonOverflowedDate(eleValue) == false ){
 							errors[errors.length] = makeError('must be a valid date', element, element.patternError);
 						}
 						else if( minDate > testDate ){
@@ -116,43 +122,43 @@ function getFormErrors(form) {
 				 }
 
 				 // pattern (credit card number, email address, zip or postal code, alphanumeric, numeric)
-				 else if (element["data-pattern"] && element.value.length != 0) {
-						if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(element.value, element["data-pattern"]) == false) ||
-									(element["data-pattern"].toLowerCase() == 'email' && isValidEmailStrict(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(element.value) == false && isValidPostalcode(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(element.value) == false) ||
+				 else if (element["data-pattern"] && eleValue.length != 0) {
+						if ( ( (element["data-pattern"].toLowerCase() == 'visa' || element["data-pattern"].toLowerCase() == 'mastercard' || element["data-pattern"].toLowerCase() == 'american express' || element["data-pattern"].toLowerCase() == 'diners club' || element["data-pattern"].toLowerCase() == 'discover' || element["data-pattern"].toLowerCase() == 'enroute' || element["data-pattern"].toLowerCase() == 'jcb' || element["data-pattern"].toLowerCase() == 'credit card') && isValidCreditCard(eleValue, element["data-pattern"]) == false) ||
+									(element["data-pattern"].toLowerCase() == 'email' && isValidEmailStrict(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'zip or postal code' && isValidZipcode(eleValue) == false && isValidPostalcode(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'zipcode' && isValidZipcode(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'postal code' && isValidPostalcode(eleValue) == false) ||
 									(element["data-pattern"].toLowerCase() == 'us phone number' &&
-										 ( (element.prefix && element.suffix && isValidUSPhoneNumber(element.value, form[element.prefix].value, form[element.suffix].value) == false) ||
-												(!element.prefix && !element.suffix && isValidUSPhoneNumber(element.value) == false) ) ) ||
-									(element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(element.value, true) == false) ||
-									(element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(element.value, false) == false) ||
+										 ( (element.prefix && element.suffix && isValidUSPhoneNumber(eleValue, form[element.prefix].value, form[element.suffix].value) == false) ||
+												(!element.prefix && !element.suffix && isValidUSPhoneNumber(eleValue) == false) ) ) ||
+									(element["data-pattern"].toLowerCase() == 'alphanumeric' && isAlphanumeric(eleValue, true) == false) ||
+									(element["data-pattern"].toLowerCase() == 'numeric' && isNumeric(eleValue, false) == false) ||
 
 									/* integers */
-									(element["data-pattern"].toLowerCase() == 'integer' && isInteger(element.value, false, false) == false) ||
-									(element["data-pattern"].toLowerCase() == 'english integer' && isInteger(element.value, false, true) == false) ||
-									(element["data-pattern"].toLowerCase() == 'year' && isInteger(element.value, false, false) == false) ||
+									(element["data-pattern"].toLowerCase() == 'integer' && isInteger(eleValue, false, false) == false) ||
+									(element["data-pattern"].toLowerCase() == 'english integer' && isInteger(eleValue, false, true) == false) ||
+									(element["data-pattern"].toLowerCase() == 'year' && isInteger(eleValue, false, false) == false) ||
 
 									/* dates and times */
-									(element["data-pattern"].toLowerCase() == 'datetime' && isDate(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'time' && isTime(element.value) == false) ||
-									(element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(element.value, true) == false) ||
-									(element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern"]) == false)
+									(element["data-pattern"].toLowerCase() == 'datetime' && isDate(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'date' && isNonOverflowedDate(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'time' && isTime(eleValue) == false) ||
+									(element["data-pattern"].toLowerCase() == 'alphabetic' && isAlphabetic(eleValue, true) == false) ||
+									(element["data-pattern"].substring(0, 1) == '/' && matchesRegexString(eleValue, element["data-pattern"]) == false)
 								 ) {
 							 errors[errors.length] = makeError('must be a valid ' + element["data-pattern"], element, element.patternError);
 						}
 				 }
 
-				 else if (element["data-pattern-inverse"] && element.value.length != 0){
-						if (element["data-pattern-inverse"].substring(0, 1) == '/' && matchesRegexString(element.value, element["data-pattern-inverse"])){
+				 else if (element["data-pattern-inverse"] && eleValue.length != 0){
+						if (element["data-pattern-inverse"].substring(0, 1) == '/' && matchesRegexString(eleValue, element["data-pattern-inverse"])){
 							 errors[errors.length] = makeError('must be a valid ' + element["data-pattern-inverse"], element, element.patternInverseError);
 						}
 				 }
 
 				 // minimum and maximum value
 				 // strip commas
-				 var testval = element.value;
+				 var testval = eleValue;
 				 while (testval.match(/,/) == ',')
 					testval = testval.replace(',', '');
 
