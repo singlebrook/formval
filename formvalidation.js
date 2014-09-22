@@ -594,7 +594,8 @@ function showErrors (errors, form, customErrorListHeader, customErrorListFooter)
 
 		// Display an error message for the overall form
 		if (form) {
-			var errorContainer = document.getElementById(form.getAttribute('id') + '_error');
+			var errorContainerId = form.getAttribute('id') + '_error';
+			var errorContainer = document.getElementById(errorContainerId);
 			if (errorContainer) {
 				formval_removeClass(errorContainer, 'hidden');
 				try { errorContainer.innerHTML = errorMessage; }
