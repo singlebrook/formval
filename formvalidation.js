@@ -553,8 +553,9 @@ function getMod10(number) {
 }
 
 /* `showErrors` displays the errors inline or as an alert(). Note the new form arg! */
-function showErrors (errors, form, customErrorListHeader, customErrorListFooter) {
+function showErrors (errors, form, customErrorListHeader, customErrorListFooter, scrollToErrors) {
 	var undisplayedErrorCount = 0;
+	var scrollToErrors = typeof scrollToErrors == 'undefined' ? true : scrollToErrors;
 
 	if (form) {
 		formval_clearErrors(form);
@@ -608,7 +609,9 @@ function showErrors (errors, form, customErrorListHeader, customErrorListFooter)
 					errorContainer.innerHTML = "There was a problem with your form.  Please check it and try again.";
 				}
 
-				formval_scrollTo($('#' + errorContainerId));
+				if( scrollToErrors ){
+					formval_scrollTo($('#' + errorContainerId));
+				}
 			}
 			// Fallback to an alert if there were errors we couldn't display inline and there's no overall form error message area
 			else if (undisplayedErrorCount > 0)
