@@ -61,13 +61,13 @@ function getFormErrors(form, trimWS) {
 			'maxval');
 
 	 // loop thru all form elements
-	 for (var elementIndex = 0; elementIndex < form.elements.length; elementIndex++) {
+	 for( var elementIndex = 0; elementIndex < form.elements.length; elementIndex++ ){
 			var element = form.elements[elementIndex];
 
 			// Copy relevant attributes to element properties for all element types excepts radios and checkboxes.
 			// This allows us to put the validation params right in the form element tags.
-			for ( var i = 0; i < arAttributes.length; i++) {
-				if (element.getAttribute(arAttributes[i])) {
+			for( var i = 0; i < arAttributes.length; i++ ){
+				if( element.hasAttribute(arAttributes[i]) ){
 					// The "new String(...).replace(...).replace(...) below removes line break chars that can cause IE7 to choke and escapes double-quote chars
 					element[arAttributes[i]] = new String(element.getAttribute(arAttributes[i])).replace(/[\r\n]/g, '').replace(/"/g, '\\"');
 				}
