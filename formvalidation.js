@@ -230,7 +230,7 @@ function getFormErrors(form, trimWS) {
 				 var radiogroup = form.elements[element.name];
 
 				 // required element
-				 if (radiogroup.length && radiogroup[0] && (radiogroup[0]["data-required"] || radiogroup["data-required"])) {
+				 if( radiogroup != undefined && radiogroup.length && radiogroup[0] && (radiogroup[0]["data-required"] || radiogroup["data-required"]) ){
 						var checkedRadioButton = -1;
 						for (var radioIndex = 0; radioIndex < radiogroup.length; radioIndex++) {
 							 if (radiogroup[radioIndex].checked == true) {
