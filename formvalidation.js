@@ -60,7 +60,8 @@ function getFormErrors(form, trimWS) { // eslint-disable-line no-unused-vars
     'disallowEmptyValue',
     'disallowEmptyValueError',
     'minval',
-    'maxval');
+    'maxval',
+    'minvalerrortext');
 
   // loop thru all form elements
   for( var elementIndex = 0; elementIndex < form.elements.length; elementIndex++ ){
@@ -177,8 +178,13 @@ function getFormErrors(form, trimWS) { // eslint-disable-line no-unused-vars
         testval = testval.replace(',', '');
 
       if (testval.replace(/\s/g, '') != '' && isNumeric(testval, false)) {
-        if (element.minval && (1*testval < 1*element.minval))
-          errors[errors.length] = makeError('cannot be less than ' + element.minval, element);
+        if (element.minval && (1*testval < 1*element.minval)){
+          if( element.minvalerrortext ){
+            errors[errors.length] = makeError(element.minvalerrortext, element);
+          } else {
+            errors[errors.length] = makeError('cannot be less than ' + element.minval, element);
+          }
+        }
 
         if (element.maxval && isNumeric(testval, false) && (1*testval > 1*element.maxval))
           errors[errors.length] = makeError('cannot be greater than ' + element.maxval, element);
